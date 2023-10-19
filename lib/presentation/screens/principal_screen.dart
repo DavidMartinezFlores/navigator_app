@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:navigator_app/config/theme/app_theme.dart';
 import 'package:navigator_app/models/user.dart';
 import 'package:navigator_app/config/providers/users_provider.dart';
 import 'package:navigator_app/presentation/screens/secondary_screen.dart';
@@ -17,14 +18,20 @@ class PrincipalScreen extends StatelessWidget {
 
     final TextEditingController textControllerName = TextEditingController();
     final TextEditingController textControllerLoggin = TextEditingController();
+    
     final orientation = MediaQuery.of(context).orientation;
+
+    final themeApp = AppTheme(selectedColor: 1).theme();
 
     return SafeArea(
       child: Scaffold(
+
         appBar: (orientation==Orientation.portrait) ? AppBar(
-          title: const Text("LOGGIN USUARIOS"),
+          title: const Text("LOGGIN USUARIOS",style: TextStyle(color:Colors.white, fontWeight: FontWeight.bold),),
           centerTitle: true,
+          backgroundColor: themeApp.primaryColor,
         ):null,
+
           body: Center(
             child: SingleChildScrollView(
               child: Column(
@@ -33,10 +40,19 @@ class PrincipalScreen extends StatelessWidget {
             
                   const Text("Nombre Usuario: ",style: TextStyle(fontWeight: FontWeight.bold),),
                   TextFormField(
-                    decoration: const InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40)))),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: themeApp.secondaryHeaderColor,
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(40))
+                        )
+                    ),
                     controller: textControllerName,
                     onFieldSubmitted: (value) {
-                      usersProvider.addUserName(value.toString().trim());
+
+                      logUser(context,usersProvider.userList, textControllerLoggin.value.text, textControllerName.value.text);
+                      logginPopUp(context);
+                      
                     },
                     ),
             
@@ -44,52 +60,29 @@ class PrincipalScreen extends StatelessWidget {
             
                   const Text("Pass de Usuario: ",style: TextStyle(fontWeight: FontWeight.bold),),
                   TextFormField(
-                    decoration: const InputDecoration(fillColor: Colors.blue,border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40)))),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: themeApp.secondaryHeaderColor,
+                      border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40)))
+                      ),
                     controller: textControllerLoggin,
                     onFieldSubmitted: (value) {
-                      usersProvider.addLoggin(value.toString().trim());
-             
-                      for(User user in usersProvider.userList){
-                        if(user.password==usersProvider.loggin && user.username==usersProvider.userName)
-                        {
-                          Navigator.push(
-                            context, 
-                            MaterialPageRoute(builder: (context) => SecondaryScreen(user: user,))
-                          );
-                        }
-                      }
+
+                      logUser(context,usersProvider.userList, textControllerLoggin.value.text, textControllerName.value.text);
+                      logginPopUp(context);
+
                     },
                     ),
                     
                     SizedBox(height: sizeOfScreen.height*0.1),
 
                     FilledButton(onPressed: () {
-                      print(orientation);
+
                       logUser(context,usersProvider.userList, textControllerLoggin.value.text, textControllerName.value.text);
-                      if(!logged)
-                      {
-                          showDialog(
-                            barrierDismissible: false,
-                            context: context, 
-                            builder: (context) => AlertDialog(
-                              title: const Text("! CUIDADO !"),
-                              content: const Text("Usuario o contraseña incorrectos",style: TextStyle(color: Colors.red),),
-                              actions: [
-                                TextButton(onPressed: 
-                                () {
-                                  Navigator.pop(context);
-                                }, child: const Text("Reintentar"))
-                              ],
-                          )
-                        );
-                      }
-                      logged=false;
-                      
-                      
+                      logginPopUp(context);
+
                     }, child: const Text("Iniciar Sesion")
                     ),
-                    
-            
                 ],
               ),
             ),
@@ -107,5 +100,25 @@ class PrincipalScreen extends StatelessWidget {
         Navigator.push(context,MaterialPageRoute(builder: (context) => SecondaryScreen(user: user,)) );
       }
     }
+  }
+
+  void logginPopUp(BuildContext context){
+    if(!logged){
+        showDialog(
+          barrierDismissible: false,
+          context: context, 
+          builder: (context) => AlertDialog(
+            title: const Text("! CUIDADO !",style: TextStyle(color: Colors.red),),
+            content: const Text("Usuario o contraseña incorrectos",style: TextStyle(color: Colors.red),),
+            actions: [
+              TextButton(onPressed: 
+              () {
+                Navigator.pop(context);
+              }, child: const Text("Reintentar"))
+            ],
+        )
+      );
+    }
+    logged=false;
   }
 }

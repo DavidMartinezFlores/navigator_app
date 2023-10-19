@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:navigator_app/config/providers/users_provider.dart';
+import 'package:navigator_app/config/theme/app_theme.dart';
 import 'package:navigator_app/presentation/screens/principal_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -13,12 +14,14 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeApp = AppTheme(selectedColor: 1).theme();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => UsersProvider()..fillUserList(),)
       ],
-      child: const MaterialApp(
-        home: PrincipalScreen(),
+      child: MaterialApp(
+        theme: themeApp,
+        home: const PrincipalScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );
