@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:navigator_app/classes/user.dart';
+import 'package:navigator_app/models/user.dart';
 import 'package:navigator_app/config/data/users_list.dart';
 
 UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));

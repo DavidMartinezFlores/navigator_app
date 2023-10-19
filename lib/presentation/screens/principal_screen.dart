@@ -1,69 +1,111 @@
 import 'package:flutter/material.dart';
-import 'package:navigator_app/classes/user.dart';
+import 'package:navigator_app/models/user.dart';
 import 'package:navigator_app/config/providers/users_provider.dart';
 import 'package:navigator_app/presentation/screens/secondary_screen.dart';
 import 'package:provider/provider.dart';
 
+bool logged = false;
+
 class PrincipalScreen extends StatelessWidget {
+  
   const PrincipalScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final usersProvider = context.watch<UsersProvider>();
+    final sizeOfScreen = MediaQuery.of(context).size;
 
     final TextEditingController textControllerName = TextEditingController();
     final TextEditingController textControllerLoggin = TextEditingController();
+    final orientation = MediaQuery.of(context).orientation;
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
+        appBar: (orientation==Orientation.portrait) ? AppBar(
           title: const Text("LOGGIN USUARIOS"),
           centerTitle: true,
-        ),
+        ):AppBar(),
           body: Center(
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-
-                const Text("Nombre Usuario: "),
-                TextFormField(
-                  decoration: const InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40)))),
-                  controller: textControllerName,
-                  onFieldSubmitted: (value) {
-                    usersProvider.addUserName(value.toString().trim());
-                  },
-                  ),
-
-                const SizedBox(height: 20),
-
-                const Text("Pass de Usuario: "),
-                TextFormField(
-                  decoration: const InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40)))),
-                  controller: textControllerLoggin,
-                  onFieldSubmitted: (value) {
-                    usersProvider.addLoggin(value.toString().trim());
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: sizeOfScreen.height*0.1),
+            
+                  const Text("Nombre Usuario: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                  TextFormField(
+                    decoration: const InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40)))),
+                    controller: textControllerName,
+                    onFieldSubmitted: (value) {
+                      usersProvider.addUserName(value.toString().trim());
+                    },
+                    ),
+            
+                  SizedBox(height: sizeOfScreen.height*0.1),
+            
+                  const Text("Pass de Usuario: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                  TextFormField(
+                    decoration: const InputDecoration(fillColor: Colors.blue,border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40)))),
+                    controller: textControllerLoggin,
+                    onFieldSubmitted: (value) {
+                      usersProvider.addLoggin(value.toString().trim());
+             
+                      for(User user in usersProvider.userList){
+                        if(user.password==usersProvider.loggin && user.username==usersProvider.userName)
+                        {
+                          Navigator.push(
+                            context, 
+                            MaterialPageRoute(builder: (context) => SecondaryScreen(user: user,))
+                          );
+                        }
+                      }
+                    },
+                    ),
                     
-                    for(User user in usersProvider.userList){
-                      if(user.password==usersProvider.loggin && user.username==usersProvider.userName)
+                    SizedBox(height: sizeOfScreen.height*0.1),
+
+                    FilledButton(onPressed: () {
+                      print(orientation);
+                      logUser(context,usersProvider.userList, textControllerLoggin.value.text, textControllerName.value.text);
+                      if(!logged)
                       {
-                        Navigator.push(
-                          context, 
-                          MaterialPageRoute(builder: (context) => SecondaryScreen(user: user,))
+                          showDialog(
+                            barrierDismissible: false,
+                            context: context, 
+                            builder: (context) => AlertDialog(
+                              title: const Text("! CUIDADO !"),
+                              content: const Text("Usuario o contraseña incorrectos",style: TextStyle(color: Colors.red),),
+                              actions: [
+                                TextButton(onPressed: 
+                                () {
+                                  Navigator.pop(context);
+                                }, child: const Text("Reintentar"))
+                              ],
+                          )
                         );
                       }
-                    }
-                  },
-                  ),
-
-                  const SizedBox(height: 20),
-                  Text("Selected USERNAME: ${usersProvider.userName}",
-                  style: const TextStyle(
-                    fontWeight:FontWeight.bold,color: Colors.red),
-                  )
-              ],
+                      logged=false;
+                      
+                      
+                    }, child: const Text("Iniciar Sesion")
+                    ),
+                    
+            
+                ],
+              ),
             ),
           ),
         ),
     );
+  }
+
+  void logUser(BuildContext context,List<User>lista,String pass , String userName)
+  {
+    for(User user in lista){
+      if(user.password==pass && user.username==userName)
+      {
+        logged=true;
+        Navigator.push(context,MaterialPageRoute(builder: (context) => SecondaryScreen(user: user,)) );
+      }
+    }
   }
 }

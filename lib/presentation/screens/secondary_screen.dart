@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:navigator_app/classes/user.dart';
+import 'package:navigator_app/models/user.dart';
 
 class SecondaryScreen extends StatelessWidget {
   final User user;
   const SecondaryScreen({super.key, required this.user});
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
