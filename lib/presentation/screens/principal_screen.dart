@@ -24,7 +24,7 @@ class PrincipalScreen extends StatelessWidget {
         appBar: (orientation==Orientation.portrait) ? AppBar(
           title: const Text("LOGGIN USUARIOS"),
           centerTitle: true,
-        ):AppBar(),
+        ):null,
           body: Center(
             child: SingleChildScrollView(
               child: Column(
