@@ -11,17 +11,17 @@ final List<Map<String, String>> usersList=[
   },
   {
     "username":"Pablo",
-    "password":"4321",
+    "password":"1234",
     "information":"La informacion de Pablo"
   },
   {
     "username":"Manuel",
-    "password":"4321",
+    "password":"1234",
     "information":"La informacion de Manuel"
   },
   {
     "username":"Alba",
-    "password":"123456A",
+    "password":"1234",
     "information":"La informacion de Alba"
   }
 ];

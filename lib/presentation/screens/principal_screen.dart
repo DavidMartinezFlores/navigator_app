@@ -38,50 +38,70 @@ class PrincipalScreen extends StatelessWidget {
                 children: [
                   SizedBox(height: sizeOfScreen.height*0.1),
             
-                  const Text("Nombre Usuario: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: themeApp.secondaryHeaderColor,
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(40))
-                        )
-                    ),
-                    controller: textControllerName,
-                    onFieldSubmitted: (value) {
 
-                      logUser(context,usersProvider.userList, textControllerLoggin.value.text, textControllerName.value.text);
-                      logginPopUp(context);
-                      
-                    },
-                    ),
+                  const Text("Nombre Usuario: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                  SizedBox(
+                    width: sizeOfScreen.width*0.9,
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        filled: true,
+                        hintText: "Nombre de usuario",
+                        hintStyle: TextStyle(color: themeApp.hintColor.withOpacity(0.3)),
+                        fillColor: themeApp.secondaryHeaderColor,
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12))
+                          )
+                      ),
+                      controller: textControllerName,
+                      onFieldSubmitted: (value) {
+                  
+                        logUser(context,usersProvider.userList, textControllerLoggin.value.text, textControllerName.value.text);
+                        logginPopUp(context);
+                        
+                      },
+                      ),
+                  ),
             
                   SizedBox(height: sizeOfScreen.height*0.1),
             
                   const Text("Pass de Usuario: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: themeApp.secondaryHeaderColor,
-                      border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40)))
+                  SizedBox(
+                    width: sizeOfScreen.width*0.9,
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        filled: true,
+                        hintText: "Password",
+                        hintStyle: TextStyle(color: themeApp.hintColor.withOpacity(0.3)),
+                        fillColor: themeApp.secondaryHeaderColor,
+                        border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)))
+                        ),
+                      controller: textControllerLoggin,
+                      onFieldSubmitted: (value) {
+                  
+                        logUser(context,usersProvider.userList, textControllerLoggin.value.text, textControllerName.value.text);
+                        logginPopUp(context);
+                  
+                      },
                       ),
-                    controller: textControllerLoggin,
-                    onFieldSubmitted: (value) {
-
-                      logUser(context,usersProvider.userList, textControllerLoggin.value.text, textControllerName.value.text);
-                      logginPopUp(context);
-
-                    },
-                    ),
+                  ),
                     
                     SizedBox(height: sizeOfScreen.height*0.1),
 
-                    FilledButton(onPressed: () {
+                    FilledButton(
+                    style: ButtonStyle(
+                      minimumSize: MaterialStatePropertyAll(Size(sizeOfScreen.width*0.9, sizeOfScreen.height*0.1)),
+                      shape: MaterialStateProperty.all(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5))
+                        )
+                        )
+                    ),
+                    onPressed: () {
 
                       logUser(context,usersProvider.userList, textControllerLoggin.value.text, textControllerName.value.text);
                       logginPopUp(context);
 
-                    }, child: const Text("Iniciar Sesion")
+                    }, child: const Text("LOGIN")
                     ),
                 ],
               ),
