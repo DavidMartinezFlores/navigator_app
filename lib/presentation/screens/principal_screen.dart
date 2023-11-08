@@ -3,6 +3,7 @@ import 'package:navigator_app/config/theme/app_theme.dart';
 import 'package:navigator_app/models/user.dart';
 import 'package:navigator_app/config/providers/users_provider.dart';
 import 'package:navigator_app/presentation/screens/secondary_screen.dart';
+import 'package:navigator_app/services/firebase_service.dart';
 import 'package:provider/provider.dart';
 
 bool logged = false;
@@ -82,6 +83,14 @@ class PrincipalScreen extends StatelessWidget {
                       logginPopUp(context);
 
                     }, child: const Text("Iniciar Sesion")
+                    ),
+
+                     FilledButton(onPressed: () async {
+                      
+                      FirebaseService service = new FirebaseService();
+                      await service.signInwithGoogle();
+                      Navigator.push(context,MaterialPageRoute(builder: (context) => SecondaryScreen(user: User(username: "", password: "", information: ""),)) );
+                    }, child: const Text("Logear con Google")
                     ),
                 ],
               ),
